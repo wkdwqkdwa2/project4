@@ -1,0 +1,14 @@
+{
+    "data": [
+        {
+            "Area": "North",
+            "Result": 100,
+            "Result2": 200
+        },
+        {
+            "Area": "South",
+            "Result": 150,
+            "Result2": 250
+        }
+    ]
+}

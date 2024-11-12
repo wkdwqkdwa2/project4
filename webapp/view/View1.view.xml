@@ -1,0 +1,98 @@
+<mvc:View controllerName="project4.controller.View1"
+    xmlns="sap.m"
+    xmlns:viz="sap.viz.ui5.controls" 
+    xmlns:layout="sap.ui.layout"
+    xmlns:mvc="sap.ui.core.mvc" 
+    xmlns:viz.feeds="sap.viz.ui5.controls.common.feeds"
+    xmlns:viz.data="sap.viz.ui5.data" 
+    height="100%">
+
+    <layout:FixFlex id='chartFixFlex' minFlexSize="250">
+        
+        <!-- 해당 영역은은 Chart와 연결되어 필터를 넣을 수 있는 영역입니다. -->
+        <layout:fixContent>
+            <Panel id='settingsPanel' class="panelStyle" expandable="true" expanded="true" headerText="Settings" width="auto">
+                <content>
+
+            <VBox class="sapUiSmallMargin">
+                <!-- HBOX 안에 같이 있다면 같은 라인에 있습니다. -->
+                <HBox>
+                <!-- 범위로 날짜 값 받기 해당 값을 JS에서 받기 위해 데이터 세팅과 함수를 생성해야 합니다. controller에 있는 View를 봐주세요.-->
+                    <DateRangeSelection
+                        id="DRS"
+                        change="handleChange"
+                        value= "{
+                            'type': 'sap.ui.model.type.DateInterval',
+                            'parts': [
+                                {
+                                    'type': 'sap.ui.model.type.Date',
+                                    'path': '/oDRSStart'
+                                },
+                                {
+                                    'type': 'sap.ui.model.type.Date',
+                                    'path': '/oDRSEnd'
+                                }
+                            ]
+                        }"/>
+                    <Button icon="sap-icon://search" text="Search" press="onSearch"/>
+                    <Input value="입력창입니다." required="true"/>
+                </HBox>
+            </VBox>
+                </content>
+            </Panel>
+        </layout:fixContent>
+
+        <!-- flexContent 영역 : 데이터를 연결해주는 구간입니다. -->
+        <layout:flexContent>
+        <!-- 아래 속성 selectionChange를 통해 해당 함수를 호출할 수 있게 합니다. -->
+            <viz:VizFrame id="idVizFrame" uiConfig="{applicationSet:'fiori'}"
+                height='100%' width="100%" vizType='stacked_column'>
+                <!-- X축 Y축 정의 -->
+                <viz:dataset>
+                    <viz.data:FlattenedDataset data="{data>/data}">
+                        <viz.data:dimensions>
+                            <viz.data:DimensionDefinition
+                                    name="Area"
+                                    value="{data>Area}"
+                            />
+                        </viz.data:dimensions>
+
+                        <viz.data:measures>
+                            <viz.data:MeasureDefinition
+                                 name="Result" 
+                                 value="{data>Result}" />
+                            <viz.data:MeasureDefinition 
+                                name="Result2" 
+                                value="{data>Result2}" />
+                        </viz.data:measures>
+                    </viz.data:FlattenedDataset>
+                </viz:dataset>
+                    <!-- X축 Y축 정의 끝 -->
+                    <!-- 데이터 연결  -->
+                <viz:feeds>
+                       <viz.feeds:FeedItem
+                            uid="valueAxis"
+                            type="Measure"
+                            values="Result"
+                        />
+                        <viz.feeds:FeedItem
+                            uid="valueAxis"
+                            type="Measure"
+                            values="Result2"
+                        />
+                        <viz.feeds:FeedItem
+                            uid="categoryAxis"
+                            type="Dimension"
+                            values="Area"
+                        />
+                </viz:feeds>
+                <!-- 데이터 연결 끝 -->
+                <viz:dependents>
+                    <!-- Popover 추가: 차트 항목을 클릭할 때 선택 정보를 표시 -->
+                    <viz:Popover id="idPopOver"></viz:Popover>
+                </viz:dependents>
+            </viz:VizFrame>
+        </layout:flexContent>
+
+    </layout:FixFlex>
+</mvc:View>
